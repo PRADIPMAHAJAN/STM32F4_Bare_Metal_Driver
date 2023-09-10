@@ -1,0 +1,24 @@
+#include "stm32f4xx.h"
+#include "systick.h"
+
+#define GPIOAEN          (1U<<0)
+#define PIN5             (1U<<5)
+#define LED_PIN          PIN5
+
+
+int main(void)
+{
+	RCC->AHB1ENR |= GPIOAEN;
+
+	GPIOA->MODER |= (1U<<10);
+	GPIOA->MODER &=~ (1U<<11);
+	while(1)
+	{
+		//GPIOA->ODR ^= LED_PIN;
+		//Use BSRR
+		GPIOA->BSRR = LED_PIN;
+		systickDelayMS(500);
+		GPIOA->BSRR = (1U<<21);
+		systickDelayMS(500);
+	}
+}
